@@ -1,6 +1,6 @@
 welcome_greeting = "Welcome to the Prayer Line of Fellowship Mission Church. Please press 1 \
     at any time to continue to the Prayer Line. Please press 2 for our \
-    seasonal worship service schedule. Please press 3 for our location \
+    seasonal worship service. Please press 3 for our location \
     and directions to our Congregation."
 
 please_wait_greeting =  "The Prayer Line will begin shortly."
