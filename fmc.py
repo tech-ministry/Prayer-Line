@@ -1,8 +1,8 @@
+from flask import Flask, Response, request, url_for
 import logging
 import logging.config
 import sys
 import os
-from flask import Flask, Response, request, url_for
 import plivo
 import plivoxml
 import settings, greetings
@@ -46,7 +46,7 @@ SMS_NOTIFICATION_NUMBER = settings.to_number
 
 # NOTE: source can't be the same as the number above (or any number that we send the messages to)
 SMS_SOURCE_NUMBER = settings.from_number
-SMS_NOTIFICATION_TEMPLATE = 'A new speaker has joined the conference. Caller id: %s.'
+SMS_NOTIFICATION_TEMPLATE = '%s has joined the Prayer Line! Hallelujah!'
 
 SPEAKER_PIN = settings.pin_number
 CONFERENCE_UNMUTE_SEQUENCE = settings.CONFERENCE_UNMUTE_SEQUENCE
@@ -94,15 +94,15 @@ def main_menu():
 
     if request.method == 'GET':
         g = response.addGetDigits(action=url_for('main_menu', _external=True),
-                                       method='POST', timeout=7, numDigits=1,
+                                       method='POST', timeout=17, numDigits=1,
                                        retries=1)
 
         g.addSpeak(GREETING)
-        response.addWait(length="10")
+        #response.addWait(length="10")
         response.addSpeak(NO_INPUT_MESSAGE)
-        response.addWait(length="15")
+        #response.addWait(length="15")
                     ###### Does not work at this location???
-        #notify_admin(request.form.get('From'))
+        notify_admin(request.form.get('From'))
 
     elif request.method == 'POST':
         digit = request.form.get('Digits')
@@ -114,6 +114,7 @@ def main_menu():
                 startConferenceOnEnter='false', muted='true', stayAlone='false',
                 record='true'
             )
+            notify_admin(request.form.get('From'))
         if digit == '2':
             response.addSpeak(SCHEDULE)#, voice=VOICE)
             response.addRedirect(url_for('main_menu', _external=True), method='GET')
@@ -180,7 +181,7 @@ def conference_listener_wait():
 def add_conference_pin_request(response, header_text):
     g = response.addGetDigits(numDigits=4, action=url_for('conference_speaker', _external=True),timeout=20)
     g.addSpeak('%s Please enter the code to host the conference.' % header_text,voice=VOICE)
-    response.addWait(length="10")
+    #response.addWait(length="10")
     #####################g.addSpeak('%s Please enter the code to host the conference.' % header_text,voice=VOICE)
     return response
 
@@ -198,7 +199,7 @@ def notify_admin(caller_number):
         plivo_api = plivo.RestAPI(settings.PLIVO_AUTH_ID, settings.PLIVO_TOKEN)
         response = plivo_api.send_message({'src': SMS_SOURCE_NUMBER,
                                            'dst': SMS_NOTIFICATION_NUMBER,
-                                           'text': SMS_NOTIFICATION_TEMPLATE % caller_number})
+                                           'text': SMS_NOTIFICATION_TEMPLATE % NOTIFY_ADMIN[caller_number]}) #caller_number})
         print "  response = ", response
 
 
@@ -270,10 +271,10 @@ def error_handler():
     app.logger.error('Pilvo error: %s , %s' % (request.values, request.data))
     print 'Pilvo error: %s , %s' % (request.values, request.data)
 
-    response.addWait(length="7")
+    #response.addWait(length="7")
     response = plivoxml.Response()
     response.addRedirect(url_for('main_menu', _external=True))
-    response.addWait(length="7")
+    #response.addWait(length="7")
     return Response(str(response), mimetype='text/xml')
 
 
