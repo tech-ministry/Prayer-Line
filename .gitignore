@@ -3,6 +3,5 @@ plivo/settings.py
 dict.py
 greetings.txt
 settings.py
-requirements.txt
 Procfile
 
