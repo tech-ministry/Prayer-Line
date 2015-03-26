@@ -7,6 +7,11 @@ import plivo
 import plivoxml
 import settings, greetings
 
+""" To DO:
+refresh api key
+add key beeps
+
+"""
 
 # This file will be played when a caller presses 2.
 PLIVO_SONG = "https://s3.amazonaws.com/plivocloud/music.mp3"
@@ -42,7 +47,7 @@ CONFERENCE_NAME = "Prayer_Line_01" #Inster date/time stamp ????
 NOTIFY_ADMIN = settings.NOTIFY_ADMIN
 
 # Numbers used for sending SMS notification messages
-SMS_NOTIFICATION_NUMBER = settings.to_number
+SMS_NOTIFICATION_NUMBER = settings.admins
 
 # NOTE: source can't be the same as the number above (or any number that we send the messages to)
 SMS_SOURCE_NUMBER = settings.from_number
@@ -112,7 +117,7 @@ def main_menu():
             response.addConference(
                 CONFERENCE_NAME, waitSound=url_for('conference_listener_wait',_external=True),
                 startConferenceOnEnter='false', muted='true', stayAlone='false',
-                record='true'
+                record='true', enterSound='beep:1'
             )
             notify_admin(request.form.get('From'))
         if digit == '2':
@@ -219,7 +224,7 @@ def conference_speaker():
             response.addConference(
                 CONFERENCE_NAME, startConferenceOnEnter='true', muted='false', stayAlone='true',
                 record='true', callbackUrl=url_for('conference_callback', _external=True),
-                digitsMatch=CONFERENCE_UNMUTE_SEQUENCE, callbackMethod='POST'
+                digitsMatch=CONFERENCE_UNMUTE_SEQUENCE, callbackMethod='POST', enterSound='beep:2'
             )
             notify_admin(request.form.get('From'))
         else:
