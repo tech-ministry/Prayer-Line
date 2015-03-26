@@ -201,8 +201,10 @@ def notify_admin(caller_number):
     if caller_number in NOTIFY_ADMIN:
         print "Sending notification message to %s" % SMS_NOTIFICATION_NUMBER
         # TODO: send sms
-        plivo_api = plivo.RestAPI(settings.PLIVO_AUTH_ID, settings.PLIVO_TOKEN)
-        response = plivo_api.send_message({'src': SMS_SOURCE_NUMBER,
+        for j in SMS_NOTIFICATION_NUMBER:
+
+            plivo_api = plivo.RestAPI(settings.PLIVO_AUTH_ID, settings.PLIVO_TOKEN)
+            response = plivo_api.send_message({'src': SMS_SOURCE_NUMBER,
                                            'dst': SMS_NOTIFICATION_NUMBER,
                                            'text': SMS_NOTIFICATION_TEMPLATE % NOTIFY_ADMIN[caller_number]}) #caller_number})
         print "  response = ", response

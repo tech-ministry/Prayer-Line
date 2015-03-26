@@ -1,0 +1,2 @@
+#heroku .gitignore version
+*.pyc
