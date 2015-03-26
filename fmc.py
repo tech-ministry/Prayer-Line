@@ -205,7 +205,7 @@ def notify_admin(caller_number):
 
             plivo_api = plivo.RestAPI(settings.PLIVO_AUTH_ID, settings.PLIVO_TOKEN)
             response = plivo_api.send_message({'src': SMS_SOURCE_NUMBER,
-                                           'dst': SMS_NOTIFICATION_NUMBER,
+                                           'dst': j,
                                            'text': SMS_NOTIFICATION_TEMPLATE % NOTIFY_ADMIN[caller_number]}) #caller_number})
         print "  response = ", response
 
