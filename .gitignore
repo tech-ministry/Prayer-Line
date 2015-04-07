@@ -1,2 +1,10 @@
-#heroku .gitignore version
 *.pyc
+dict.py
+greetings.txt
+settings.py
+/ENV
+*.pyc
+dict.py
+greetings.txt
+settings.py
+/ENV
